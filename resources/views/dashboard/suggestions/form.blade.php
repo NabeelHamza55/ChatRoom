@@ -126,7 +126,7 @@
                             <div class="col-6">
                                 <div class="form-group mt-5">
                                     <span class="switch switch-sm ">
-                                        <label class="col-form-label px-1">Status: </label>
+                                        <label class="col-form-label px-1">Reject/Approve: </label>
                                         <label class="px-1">
                                             <input type="checkbox"
                                                 {{ !empty($data) && $data->status == 1 ? 'checked' : (old('status') == 1 ? 'checked' : '') }}

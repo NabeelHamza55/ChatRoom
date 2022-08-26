@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\FAQsController;
-use App\Http\Controllers\Dashboard\HomeController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\SuggestionController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ use App\Http\Controllers\Dashboard\SuggestionController;
 
 Auth::routes();
 
+Route::get('', [LoginController::class, 'adminLoginForm'])->name('Home');
 Route::get('/admin', [LoginController::class, 'adminLoginForm'])->name('AdminLogin');
 Route::post('/admin-login', [LoginController::class, 'adminlogin'])->name('AdminLoginReq');
 Route::get('/admin-logout', [LoginController::class, 'adminLogout'])->name('AdminLogout');
@@ -37,11 +39,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/create', [AdminController::class, 'store'])->name('AdminCreate');
     Route::put('/update/{id}', [AdminController::class, 'update'])->name('AdminUpdate');
     Route::get('/delete/{id}', [AdminController::class, 'destroy'])->name('AdminDelete');
-    Route::get('/profile/{id}', [AdminController::class, 'Profile'])->name('AdminProfile');
-    Route::put('/update/{id}', [AdminController::class, 'update'])->name('AdminUpdate');
+    Route::get('/profile', [AdminController::class, 'Profile'])->name('AdminProfile');
+    Route::put('profile/update', [AdminController::class, 'profileUpdate'])->name('AdminProfileUpdate');
 });
 Route::prefix('dashboard')->group(function () {
-    Route::get('', [HomeController::class, 'index'])->name('Dashboard');
+    Route::get('', [DashboardController::class, 'index'])->name('Dashboard');
     Route::prefix('users')->group(function () {
         Route::get('list', [UserController::class, 'index'])->name('UserList');
         Route::get('add', [UserController::class, 'create'])->name('UserAdd');
@@ -57,4 +59,16 @@ Route::prefix('dashboard')->group(function () {
         Route::put('update/{id}', [SuggestionController::class, 'update'])->name('SuggestionUpdate');
         Route::get('delete/{id}', [SuggestionController::class, 'destory'])->name('SuggestionDelete');
     });
+});
+Route::get('app-optimize', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    return redirect()->route('Dashboard');
+});
+
+Route::get('migrate-database', function () {
+    Artisan::call('migrate:fresh --seed');
+    return redirect()->route('Dashboard');
 });

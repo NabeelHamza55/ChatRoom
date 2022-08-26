@@ -51,7 +51,7 @@ class LoginController extends Controller
     // }
     // Admin Auth
     public function adminLoginForm(){
-        return view('dashboard.Auth.login');
+        return view('dashboard.auth.login');
     }
 
     public function adminlogin(Request $request){

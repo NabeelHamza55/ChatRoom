@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('signup', [AuthController::class, 'signUp'])->name('SignUp');
 Route::post('signin', [AuthController::class, 'signIn'])->name('SignIn');
 Route::post('social', [AuthController::class, 'socialLogin'])->name('SocialSignIn');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('suggestion/add', [ApiController::class, 'suggestion'])->name('SuggestionAdd');
+});

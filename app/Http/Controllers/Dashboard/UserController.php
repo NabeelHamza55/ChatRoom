@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use phpDocumentor\Reflection\Types\Null_;
 
@@ -26,7 +27,7 @@ class UserController extends Controller
         $request->flash();
         $request->validate([
             'name' => 'required',
-            'username' => 'required_with:name',
+            'username' => 'required_with:name|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'passwordConfirmation' => 'required|same:password',
@@ -49,16 +50,16 @@ class UserController extends Controller
             $image = $this->uploadImage($request->image);
         }
 
-        $checkUsername = User::where('name', $request->name)->latest('id')->first();
-        if (empty($checkUsername)) {
-            $username = $request->username;
-        }else{
-            $username = $request->username.$checkUsername->id;
-        }
+        // $checkUsername = User::where('name', $request->name)->latest('id')->first();
+        // if (empty($checkUsername)) {
+        //     $username = $request->username;
+        // }else{
+        //     $username = $request->username.$checkUsername->id;
+        // }
 
         $user = new User();
         $user->name = $request->name;
-        $user->username = $username;
+        $user->username = $request->username;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->status = $status;
@@ -79,42 +80,62 @@ class UserController extends Controller
         $request->flash();
         $request->validate([
             'name' => 'required',
-            'username' => 'required_with:name',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'passwordConfirmation' => 'required_with:password|same:password',
         ],[
             'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
-            'email.email' => 'Email is invalid',
-            'email.unique' => 'Email is already taken',
-            'passwordConfirmation.required_with' => 'Password confirmation is required',
-            'passwordConfirmation.same' => 'Password confirmation failed',
         ]);
-        if (empty($request->status)) {
-            $status = 0;
-        }else{
-            $status = 1;
+        if (Auth::guard('admin')->user()->role == 'admin' || Auth::guard('admin')->user()->role == 'moderator') {
+           $request->validate([
+            'username' => 'required|unique:users,username,'.$id.',id'
+           ]);
         }
-        $checkUsername = User::where('name', $request->name)->where('id !=', $id)->latest('id')->first();
-        if (empty($checkUsername)) {
-            $username = $request->username;
-        }else{
-            $username = $request->username.$checkUsername->id;
+        if(Auth::guard('admin')->user()->role == 'admin'){
+            $request->validate([
+                'email' => 'required|email|unique:users,email,'.$id,
+                'passwordConfirmation' => 'required_with:password|same:password',
+            ],[
+                'email.required' => 'Email is required',
+                'email.email' => 'Email is invalid',
+                'email.unique' => 'Email is already taken',
+                'passwordConfirmation.required_with' => 'Password confirmation is required',
+                'passwordConfirmation.same' => 'Password confirmation failed',
+            ]);
+            if (empty($request->status)) {
+                $status = 0;
+            }else{
+                $status = 1;
+            }
         }
+        if (empty($request->freeze)) {
+            $freeze = 0;
+        }else{
+            $freeze = 1;
+        }
+        // $checkUsername = User::where('name', $request->name)->where('id', '!=', $id)->latest('id')->first();
+        // if (empty($checkUsername)) {
+        //     $username = $request->username;
+        // }else{
+        //     $username = $request->username.$checkUsername->id;
+        // }
         $user = User::find($id);
         $user->name = $request->name;
-        $user->username = $username;
-        $user->email = $request->email;
-        if (!empty($request->password)) {
-            $user->password = Hash::make($request->password);
+        if (Auth::guard('admin')->user()->role =='admin' || Auth::guard('admin')->user()->role == 'moderator') {
+            # code...
+            $user->username = $request->username;
         }
-        $user->status = $status;
-        $user->birthday = date('Y-m-d', strtotime($request->birthday));
-        $user->about = $request->about;
-        if ($request->has('image')) {
-            $image = $this->uploadImage($request->image);
-            $user->avatar = $image;
+        if (Auth::guard('admin')->user()->role == 'admin') {
+            $user->email = $request->email;
+            if (!empty($request->password)) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->status = $status;
+            $user->birthday = date('Y-m-d', strtotime($request->birthday));
+            $user->about = $request->about;
+            if ($request->has('image')) {
+                $image = $this->uploadImage($request->image);
+                $user->avatar = $image;
+            }
         }
+        $user->freeze = $freeze;
         $user->save();
         return redirect()->route('UserList')->with('success', 'User updated successfully');
     }
@@ -132,10 +153,11 @@ class UserController extends Controller
         if (!empty($image)) {
             $imageName1 = $image->getClientOriginalName();
             $imageName = str_replace(' ', "", $imageName1);
-            $path = 'uploads/images/users/'.$imageName;
-            if (!file_exists(public_path('uploads/images/users/'))) {
-                $image->move(public_path('uploads/images/users'), $imageName);
+             if (!file_exists(public_path('uploads/images/users'))) {
+                mkdir('uploads/images/users', 0777, true);
             }
+            $image->move(public_path('uploads/images/users/'), $imageName);
+            $path = 'uploads/images/users/'.$imageName;
             return $path;
         }
     }

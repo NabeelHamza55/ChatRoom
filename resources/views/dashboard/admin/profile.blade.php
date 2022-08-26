@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <!--begin::Form-->
-                <form action="{{ route('profileUpdate') }}" method="post" class="form">
+                <form action="{{ route('AdminProfileUpdate') }}" method="post" class="form">
                     @csrf
                     @method('put')
                     <div class="card-body">
@@ -122,7 +122,7 @@
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success mr-2">Submit</button>
-                        <a href="{{ route('adminList') }}" type="reset" class="btn btn-secondary">Back</a>
+                        <a href="{{ redirect()->back()->getTargetUrl() }}" type="reset" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
                 <!--end::Form-->

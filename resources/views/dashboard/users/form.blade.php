@@ -7,7 +7,7 @@
             <!--begin::Info-->
             <div class="d-flex align-items-center flex-wrap mr-2">
                 <!--begin::Page Title-->
-                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Boosters</h5>
+                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Users</h5>
                 <!--end::Page Title-->
                 <!--begin::Actions-->
                 <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
@@ -38,9 +38,9 @@
                                 Edit
                             @else
                                 Add
-                            @endif Booster
+                            @endif User
                             <i class="mr-2"></i>
-                            <small class="">Enter Booster information below</small>
+                            <small class="">Enter User information below</small>
                         </h3>
                     </div>
                     <div class="card-toolbar">
@@ -70,7 +70,7 @@
                         <div class="col-xl-2"></div>
                         <div class="col-xl-8">
                             <div class="my-5">
-                                <h3 class="text-dark font-weight-bold mb-10">Booster Info:</h3>
+                                <h3 class="text-dark font-weight-bold mb-10">User Info:</h3>
                                 <div class="row align-items-center">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -86,135 +86,142 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="">Username:</label>
-                                            <input name="username"
-                                                class="form-control form-control-solid @error('username') is-invalid @enderror"
-                                                type="text"
-                                                value="{{ isset($item) ? old('username', $item->username) : old('username') }}" />
-                                            @if ($errors->has('username'))
-                                                @error('username')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            @endif
+                                    @if (Auth::guard('admin')->user()->role == 'admin' || Auth::guard('admin')->user()->role == 'moderator')
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="">Username:</label>
+                                                <input name="username"
+                                                    class="form-control form-control-solid @error('username') is-invalid @enderror"
+                                                    type="text"
+                                                    value="{{ isset($item) ? old('username', $item->username) : old('username') }}" />
+                                                @if ($errors->has('username'))
+                                                    @error('username')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
-
-                                <div class="row align-items-center">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="">Email:</label>
-                                            <input name="email"
-                                                class="form-control form-control-solid @error('email') is-invalid @enderror"
-                                                type="email" placeholder="@example.com"
-                                                value="{{ isset($item) ? old('email', $item->email) : old('email') }}" />
-                                            @if ($errors->has('email'))
-                                                @error('email')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            @endif
+                                @if (Auth::guard('admin')->user()->role == 'admin')
+                                    <div class="row align-items-center">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="">Email:</label>
+                                                <input name="email"
+                                                    class="form-control form-control-solid @error('email') is-invalid @enderror"
+                                                    type="email" placeholder="@example.com"
+                                                    value="{{ isset($item) ? old('email', $item->email) : old('email') }}" />
+                                                @if ($errors->has('email'))
+                                                    @error('email')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="">Date of birth:</label>
-                                            <input name="birthday"
-                                                class="form-control form-control-solid @error('birthday') is-invalid @enderror"
-                                                type="date"
-                                                value="{{ isset($item) ? old('birthday', $item->birthday) : old('birthday') }}" />
-                                            @if ($errors->has('birthday'))
-                                                @error('birthday')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row align-items-center">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="password">Password:</label>
-                                            <input name="password"
-                                                class="form-control form-control-solid @error('password') is-invalid @enderror"
-                                                type="password"
-                                                value="{{ isset($item) ? old('password') : old('password') }}" />
-                                            @if ($errors->has('password'))
-                                                @error('password')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="passwordConfirmation">Confirm Password:</label>
-                                            <input name="passwordConfirmation"
-                                                class="form-control form-control-solid @error('passwordConfirmation') is-invalid @enderror"
-                                                type="password"
-                                                value="{{ isset($item) ? old('passwordConfirmation', $item->passwordConfirmation) : old('passwordConfirmation') }}" />
-                                            @if ($errors->has('passwordConfirmation'))
-                                                @error('passwordConfirmation')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row align-items-center">
-                                    <label class="col-2">About Me:</label>
-                                    <div class="col-10">
-                                        <textarea name="about" class="form-control form-control-solid" type="text">{{ isset($item) ? old('about', $item->about) : old('about') }}</textarea>
-                                        @if ($errors->has('about'))
-                                            @error('about')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="separator separator-dashed my-10"></div>
-                                <div class="row align-items-center">
-                                    <div class="col-8">
-                                        <div class="form-group row align-items-center">
-                                            <label class="col-3">Image:</label>
-                                            <div class="col-9">
-                                                <input id="avatar"
-                                                    class="btn btn-light-primary font-weight-bolder btn-sm @error('image') is-invalid @enderror"
-                                                    name="image" type="file" oninput='UpdatePreview()' />
-                                                @if ($errors->has('image'))
-                                                    @error('image')
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="">Date of birth:</label>
+                                                <input name="birthday"
+                                                    class="form-control form-control-solid @error('birthday') is-invalid @enderror"
+                                                    type="date"
+                                                    value="{{ isset($item) ? old('birthday', $item->birthday) : old('birthday') }}" />
+                                                @if ($errors->has('birthday'))
+                                                    @error('birthday')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-4">
-                                        <img id="frame" class="img-fluid" src="" alt="Preview"
-                                            srcset="">
-                                        <span id="thumbnail_text" class="form-text text-center text-muted d-none">Double
-                                            click to
-                                            remove Thumnail</span>
+                                    <div class="row align-items-center">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="password">Password:</label>
+                                                <input name="password"
+                                                    class="form-control form-control-solid @error('password') is-invalid @enderror"
+                                                    type="password"
+                                                    value="{{ isset($item) ? old('password') : old('password') }}" />
+                                                @if ($errors->has('password'))
+                                                    @error('password')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label class="passwordConfirmation">Confirm Password:</label>
+                                                <input name="passwordConfirmation"
+                                                    class="form-control form-control-solid @error('passwordConfirmation') is-invalid @enderror"
+                                                    type="password"
+                                                    value="{{ isset($item) ? old('passwordConfirmation', $item->passwordConfirmation) : old('passwordConfirmation') }}" />
+                                                @if ($errors->has('passwordConfirmation'))
+                                                    @error('passwordConfirmation')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-2">About Me:</label>
+                                        <div class="col-10">
+                                            <textarea name="about" class="form-control form-control-solid" type="text">{{ isset($item) ? old('about', $item->about) : old('about') }}</textarea>
+                                            @if ($errors->has('about'))
+                                                @error('about')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="separator separator-dashed my-10"></div>
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <div class="form-group row align-items-center">
+                                                <label class="col-3">Image:</label>
+                                                <div class="col-9">
+                                                    <input id="avatar"
+                                                        class="btn btn-light-primary font-weight-bolder btn-sm @error('image') is-invalid @enderror"
+                                                        name="image" type="file" oninput='UpdatePreview()' />
+                                                    @if ($errors->has('image'))
+                                                        @error('image')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <img id="frame" class="img-fluid" src="" alt="Preview"
+                                                srcset="">
+                                            <span id="thumbnail_text"
+                                                class="form-text text-center text-muted d-none">Double
+                                                click to
+                                                remove Thumnail</span>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="row align-items-center">
-                                    <div class="form-group col-4">
-                                        <span class="switch switch-sm ">
-                                            <label class="col-form-label px-1">Status: </label>
-                                            <label class="px-1">
-                                                <input type="checkbox" value="1" name="status"
-                                                    {{ (isset($item) && $item->status == 0 ? 'unchecked' : old('status') == '0') ? 'unchecked' : 'checked' }} />
-                                                <span></span>
-                                            </label>
-                                        </span>
-                                    </div>
+                                    @if (Auth::guard('admin')->user()->role == 'admin')
+                                        <div class="form-group col-4">
+                                            <span class="switch switch-sm ">
+                                                <label class="col-form-label px-1">Status: </label>
+                                                <label class="px-1">
+                                                    <input type="checkbox" value="1" name="status"
+                                                        {{ (isset($item) && $item->status == 0 ? 'unchecked' : old('status') == '0') ? 'unchecked' : 'checked' }} />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                    @endif
                                     <div class="form-group col-4">
                                         <span class="switch switch-sm ">
                                             <label class="col-form-label px-1">Freeze?: </label>
                                             <label class="px-1">
-                                                <input type="checkbox" value="1" name="status"
-                                                    {{ (isset($item) && $item->status == 1 ? 'unchecked' : old('status') == '1') ? 'unchecked' : 'checked' }} />
+                                                <input type="checkbox" value="1" name="freeze"
+                                                    {{ (isset($item) && $item->freeze == 0 ? 'unchecked' : old('freeze') == '0') ? 'unchecked' : 'checked' }} />
                                                 <span></span>
                                             </label>
                                         </span>

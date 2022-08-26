@@ -24,7 +24,7 @@ class AdminController extends Controller
     public function index()
     {
         $admins = Admin::all();
-        return view('dashboard.Admin.list', compact('admins'));
+        return view('dashboard.admin.list', compact('admins'));
     }
 
     public function dashboard(){
@@ -37,7 +37,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('dashboard.Admin.add');
+        return view('dashboard.admin.add');
     }
 
     /**
@@ -54,6 +54,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:admins,email',
             'password' => 'required|min:8',
             'passwordConfirmation' => 'required|same:password',
+            'role' => 'required'
         ],[
             'passwordConfirmation.same' => 'Password Confimation Failed'
         ]);
@@ -73,6 +74,7 @@ class AdminController extends Controller
             'username' => $slug,
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
+            'role' => $request['role'],
             'status' => $status,
         ]);
         return redirect()->route('AdminList')->withErrors(['status' => 'Admin added successfuly']);
@@ -87,7 +89,7 @@ class AdminController extends Controller
     public function profile(Admin $admin)
     {
         $admin = $admin->where('id', Auth::guard('admin')->user()->id)->first();
-        return view('dashboard.Admin.profile', compact('admin'));
+        return view('dashboard.admin.profile', compact('admin'));
     }
 
     public function profileUpdate(Request $request){
@@ -124,7 +126,7 @@ class AdminController extends Controller
     {
         $id = Crypt::decrypt($id);
         $admin = $admin->where('id', $id)->first();
-        return view('dashboard.Admin.update', compact('admin'));
+        return view('dashboard.admin.update', compact('admin'));
     }
 
     /**

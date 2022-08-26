@@ -140,6 +140,26 @@
                         </div>
                         <div class="row">
                             <div class="col-6">
+                                <label>Roles</label>
+                                <div class="form-group">
+                                    <select class="form-control @error('role') is-invalid @enderror" name="role"
+                                        id="role">
+                                        <option disabled selected value="">Select</option>
+                                        <option {{ old('role') == 'admin' ? 'selected' : '' }} value="admin">Admin
+                                        </option>
+                                        <option {{ old('role') == 'moderator' ? 'selected' : '' }} value="moderator">
+                                            Moderator</option>
+                                        <option {{ old('role') == 'supporter' ? 'selected' : '' }} value="supporter">
+                                            Supporter</option>
+                                    </select>
+                                    @if ($errors->has('role'))
+                                        @error('role')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-6">
                                 <div class="form-group mt-5">
                                     <span class="switch switch-sm">
                                         <label class="col-form-label px-1">Status: </label>
