@@ -2,14 +2,15 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\FAQsController;
-use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\AdminController;
+use App\Http\Controllers\Dashboard\ReportController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\SuggestionController;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,13 @@ Route::prefix('dashboard')->group(function () {
         Route::post('create', [SuggestionController::class, 'create'])->name('SuggestionCreate');
         Route::put('update/{id}', [SuggestionController::class, 'update'])->name('SuggestionUpdate');
         Route::get('delete/{id}', [SuggestionController::class, 'destory'])->name('SuggestionDelete');
+    });
+    Route::prefix('report')->group(function () {
+        Route::get('list', [ReportController::class, 'index'])->name('ReportList');
+        Route::get('edit/{id}', [ReportController::class, 'edit'])->name('ReportEdit');
+        Route::post('create', [ReportController::class, 'create'])->name('ReportCreate');
+        Route::put('update/{id}', [ReportController::class, 'update'])->name('ReportUpdate');
+        Route::get('delete/{id}', [ReportController::class, 'destory'])->name('ReportDelete');
     });
 });
 Route::get('app-optimize', function () {

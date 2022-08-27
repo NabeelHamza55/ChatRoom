@@ -1,5 +1,5 @@
 @extends('dashboard.sidebar')
-@section('title', 'Suggestions |')
+@section('title', 'Reports |')
 
 @section('main_content')
     <!--begin::Subheader-->
@@ -8,7 +8,7 @@
             <!--begin::Info-->
             <div class="d-flex align-items-center flex-wrap mr-2">
                 <!--begin::Page Title-->
-                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Suggestions</h5>
+                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Reports</h5>
                 <!--end::Page Title-->
                 <!--begin::Actions-->
                 <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
@@ -87,7 +87,7 @@
                     </div>
                     {{-- <div class="card-toolbar">
                         <!--begin::Button-->
-                        <a href="{{ route('SuggestionsAdd') }}" class="btn btn-primary font-weight-bolder">
+                        <a href="{{ route('ReportsAdd') }}" class="btn btn-primary font-weight-bolder">
                             <span class="svg-icon svg-icon-md">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -112,7 +112,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>User</th>
-                                <th>Suggestion Status</th>
+                                <th>Report Status</th>
                                 <th>Creation</th>
                                 <th>Actions</th>
                             </tr>
@@ -154,7 +154,7 @@
                                                             class="navi-header font-weight-bolder text-uppercase font-size-sm text-primary pb-2">
                                                             Choose an option:</li>
                                                         <li class="navi-item">
-                                                            <a href="{{ route('SuggestionEdit', Crypt::encrypt($item->id)) }}"
+                                                            <a href="{{ route('ReportEdit', Crypt::encrypt($item->id)) }}"
                                                                 class="navi-link">
                                                                 <span class="navi-icon">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
@@ -163,8 +163,8 @@
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
-                                                            <a onclick="remove('{{ route('SuggestionDelete', Crypt::encrypt($item->id)) }}');"
-                                                                {{-- href="{{ route('SuggestionDelete', Crypt::encrypt($item->id)) }}" --}} class="navi-link">
+                                                            <a onclick="remove('{{ route('ReportDelete', Crypt::encrypt($item->id)) }}');"
+                                                                {{-- href="{{ route('ReportDelete', Crypt::encrypt($item->id)) }}" --}} class="navi-link">
                                                                 <span class="navi-icon">
                                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
