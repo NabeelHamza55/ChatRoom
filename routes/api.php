@@ -28,5 +28,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('objective/add', [ApiController::class, 'createObjective'])->name('CreateObjective');
     Route::get('objective/{id}', [ApiController::class, 'fetchObjective'])->name('FetchObjective');
     Route::get('user/profile/{id}', [ApiController::class, 'fetchUserProfile'])->name('FetchUserProfile');
-    Route::get('user/profile/{id}', [ApiController::class, 'fetchUserProfile'])->name('FetchUserProfile');
+    Route::post('user/profile/update', [ApiController::class, 'updateUserProfile'])->name('UpdateUserProfile');
 });

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Objective;
-use App\Models\Report;
 use stdClass;
 use App\Models\User;
+use App\Models\Report;
+use App\Models\Objective;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class ApiController extends Controller
 {
@@ -66,6 +68,17 @@ class ApiController extends Controller
         if (empty($request->description)) {
             $msg = 'Parameters are missing';
         }
+        if (empty($request->report_against)) {
+            $msg = 'Parameters are missing';
+        }else{
+            if (gettype($request->report_against)  != "integer") {
+                $msg = "Data must be an integer";
+            }else{
+                if ($request->user_id == $request->report_against) {
+                   $msg = "User Can't report againt its own id";
+                }
+            }
+        }
         if(!empty($msg)){
             $api_status = 200;
             $status = false;
@@ -76,7 +89,9 @@ class ApiController extends Controller
         }else{
             Report::create([
                 'user_id' => $request->user_id,
-                'description' => $request->description
+                'description' => $request->description,
+                'report_against' => $request->report_against,
+                'status' => 2
             ]);
             $api_status = 200;
             $status = true;
@@ -163,5 +178,21 @@ class ApiController extends Controller
             $response = compact('api_status', 'status', 'message', 'data');
             return response($response, 200);
         }
+    }
+    public function updateUserProfile(Request $request){
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required',
+        ]);
+            $user = User::find($request->user_id);
+            $user->name = $request->name;
+            $user->save();
+            $api_status = 200;
+            $status = true;
+            $message = "User name updated successfully";
+            $data = $user;
+            $response = compact('api_status', 'status', 'message', 'data');
+            return response($response, 200);
+         }
     }
 }

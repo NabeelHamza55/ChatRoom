@@ -10,6 +10,8 @@ class Report extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'description'
+        'description',
+        'type',
+        'report_against'
     ];
 }

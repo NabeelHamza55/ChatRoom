@@ -112,6 +112,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>User</th>
+                                <th>Report Against</th>
                                 <th>Report Status</th>
                                 <th>Creation</th>
                                 <th>Actions</th>
@@ -130,7 +131,7 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ getUserDetail($item->user_id ?? 0)->name }}</td>
-                                        {{-- <td>{{ $item->answer }}</td> --}}
+                                        <td>{{ getUserDetail($item->report_against ?? 0)->name }}</td>
                                         <td>
                                             <p
                                                 class="{{ $item->status == 2 ? 'label  label-light-success label-inline font-weight-bold label-lg' : ($item->status == 1 ? 'label  label-light-primay label-inline font-weight-bold label-lg' : 'label  label-light-danger label-inline font-weight-bold label-lg') }}">

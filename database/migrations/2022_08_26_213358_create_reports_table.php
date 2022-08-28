@@ -18,6 +18,7 @@ class CreateReportsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->string('type', 100)->nullable();
             $table->text('description')->nullable();
+            $table->bigInteger('report_against')->unsigned()->nullable();
             $table->boolean('status')->nullable()->default(false);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
