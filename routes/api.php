@@ -29,4 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('objective/{id}', [ApiController::class, 'fetchObjective'])->name('FetchObjective');
     Route::get('user/profile/{id}', [ApiController::class, 'fetchUserProfile'])->name('FetchUserProfile');
     Route::post('user/profile/update', [ApiController::class, 'updateUserProfile'])->name('UpdateUserProfile');
+    Route::get('follow', [ApiController::class, 'follow'])->name('FollowUser');
+    Route::get('block', [ApiController::class, 'block'])->name('BlockUser');
+    Route::get('unfollow', [ApiController::class, 'unFollow'])->name('UnFollowUser');
+    Route::get('unblock', [ApiController::class, 'unBlock'])->name('UnBlockUser');
 });

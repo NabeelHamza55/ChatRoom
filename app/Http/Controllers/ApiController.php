@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use stdClass;
 use App\Models\User;
+use App\Models\Block;
+use App\Models\Follow;
 use App\Models\Report;
 use App\Models\Objective;
 use App\Models\Suggestion;
@@ -184,15 +186,104 @@ class ApiController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
         ]);
-            $user = User::find($request->user_id);
-            $user->name = $request->name;
-            $user->save();
+        $user = User::find($request->user_id);
+        $user->name = $request->name;
+        $user->save();
+        $api_status = 200;
+        $status = true;
+        $message = "User name updated successfully";
+        $data = $user;
+        $response = compact('api_status', 'status', 'message', 'data');
+        return response($response, 200);
+    }
+    public function follow(Request $request){
+        $request->validate([
+            'user_id' => 'required|integer',
+            'follower_id' => 'required|integer'
+        ]);
+        $check = Follow::where('user_id', $request->user_id)->where('follow_by', $request->follower_id)->first();
+        if (!empty($check)) {
             $api_status = 200;
             $status = true;
-            $message = "User name updated successfully";
-            $data = $user;
-            $response = compact('api_status', 'status', 'message', 'data');
+            $message = "Follow response Successfull";
+            $response = compact('api_status', 'status', 'message');
             return response($response, 200);
-         }
+        }else{
+            Follow::create([
+                'user_id' => $request->user_id,
+                'follow_by'=> $request->follower_id
+            ]);
+            $api_status = 200;
+            $status = true;
+            $message = "Follow response Successfull";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }
+    }
+    public function unFollow(Request $request){
+        $request->validate([
+            'user_id' => 'required|integer',
+            'follower_id' => 'required|integer'
+        ]);
+        $check = Follow::where('user_id', $request->user_id)->where('follow_by', $request->follower_id)->first();
+        if (!empty($check)) {
+            $check->delete();
+            $api_status = 200;
+            $status = true;
+            $message = "UnFollow response Successfull";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }else{
+            $api_status = 200;
+            $status = true;
+            $message = "UnFollow response Successfull";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }
+    }
+    public function block(Request $request){
+        $request->validate([
+            'user_id' => 'required|integer',
+            'block_by' => 'required|integer'
+        ]);
+        $check = Block::where('user_id', $request->user_id)->where('block_by', $request->block_by)->first();
+        if (!empty($check)) {
+            $api_status = 200;
+            $status = true;
+            $message = "User Already Blocked";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }else{
+            Block::create([
+                'user_id' => $request->user_id,
+                'block_by'=> $request->block_by
+            ]);
+            $api_status = 200;
+            $status = true;
+            $message = "Block response Successfull";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }
+    }
+    public function unBlock(Request $request){
+        $request->validate([
+            'user_id' => 'required|integer',
+            'block_by' => 'required|integer'
+        ]);
+        $check = Block::where('user_id', $request->user_id)->where('block_by', $request->block_by)->first();
+        if (!empty($check)) {
+            $check->delete();
+            $api_status = 200;
+            $status = true;
+            $message = "User unBlocked Successfull";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }else{
+            $api_status = 200;
+            $status = true;
+            $message = "Fail Something Wrong";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }
     }
 }

@@ -96,8 +96,11 @@ class AuthController extends Controller
             if (!empty($request->email) && empty($checkUser)) {
                 $msg = 'Credentials are wrong';
             }
+            if ($checkUser->status == 0) {
+                $msg = "User is blocked by Administrators";
+            }
         }
-        if (!empty($request->password) && !empty($checkUser) && !( Hash::check($request->password, $checkUser->password))) {
+        if (!empty($request->password) && !empty($checkUser) && !( Hash::check($request->password,                  $checkUser->password))) {
             $msg = 'Credentials are wrong';
         }
         if (!empty($msg) && isset($msg)) {
@@ -280,4 +283,5 @@ class AuthController extends Controller
             return response($response, 200);
         }
     }
+
 }
