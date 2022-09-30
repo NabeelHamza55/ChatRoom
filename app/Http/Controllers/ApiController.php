@@ -249,7 +249,7 @@ class ApiController extends Controller
         $check = Block::where('user_id', $request->user_id)->where('block_by', $request->block_by)->first();
         if (!empty($check)) {
             $api_status = 200;
-            $status = true;
+            $status = false;
             $message = "User Already Blocked";
             $response = compact('api_status', 'status', 'message');
             return response($response, 200);
@@ -280,9 +280,85 @@ class ApiController extends Controller
             return response($response, 200);
         }else{
             $api_status = 200;
-            $status = true;
+            $status = false;
             $message = "Fail Something Wrong";
             $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        }
+    }
+
+    public function getFollowers($id){
+        $user = User::find($id);
+        if (empty($user)) {
+            $api_status = 200;
+            $status = false;
+            $message = "Invalid User ID";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        } else {
+            $api_status = 200;
+            $status = true;
+            $followers = Follow::where('user_id', $id)->get(['id', 'user_id', 'follow_by', 'created_at']);
+            if (!empty($followers[0])) {
+                foreach ($followers as $follower) {
+                    $follower->name = getUserDetail($follower->follow_by)->name;
+                    $follower->avater = getUserDetail($follower->follow_by)->avatar;
+                }
+                $message = "Followers List";
+            }else{
+                $message = 'Followers List Empty';
+            }
+            $response = compact('api_status', 'status', 'message', 'followers');
+            return response($response, 200);
+        }
+    }
+    public function getFollowing($id){
+        $user = User::find($id);
+        if (empty($user)) {
+            $api_status = 200;
+            $status = false;
+            $message = "Invalid User ID";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        } else {
+            $api_status = 200;
+            $status = true;
+            $followers = Follow::where('follow_by', $id)->get(['id', 'user_id', 'follow_by', 'created_at']);
+            if (!empty($followers[0])) {
+                foreach ($followers as $follower) {
+                    $follower->name = getUserDetail($follower->follow_by)->name;
+                    $follower->avater = getUserDetail($follower->follow_by)->avatar;
+                }
+                $message = "Following List";
+            }else{
+                $message = 'Following List Empty';
+            }
+            $response = compact('api_status', 'status', 'message', 'followers');
+            return response($response, 200);
+        }
+    }
+    public function getBlockUser($id){
+        $user = User::find($id);
+        if (empty($user)) {
+            $api_status = 200;
+            $status = false;
+            $message = "Invalid User ID";
+            $response = compact('api_status', 'status', 'message');
+            return response($response, 200);
+        } else {
+            $api_status = 200;
+            $status = true;
+            $blocked = Block::where('block_by', $id)->get(['id', 'user_id', 'block_by', 'created_at']);
+            if (!empty($blocked[0])) {
+                foreach ($blocked as $block) {
+                    $block->name = getUserDetail($block->block_by)->name;
+                    $block->avater = getUserDetail($block->block_by)->avatar;
+                }
+                $message = "Blocked List";
+            }else{
+                $message = 'Blocked List Empty';
+            }
+            $response = compact('api_status', 'status', 'message', 'blocked');
             return response($response, 200);
         }
     }

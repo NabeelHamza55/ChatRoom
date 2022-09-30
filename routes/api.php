@@ -33,4 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('block', [ApiController::class, 'block'])->name('BlockUser');
     Route::get('unfollow', [ApiController::class, 'unFollow'])->name('UnFollowUser');
     Route::get('unblock', [ApiController::class, 'unBlock'])->name('UnBlockUser');
+    Route::get('followers/{id}', [ApiController::class, 'getFollowers'])->name('GetFollowers');
+    Route::get('following/{id}', [ApiController::class, 'getFollowing'])->name('GetFollowings');
+    Route::get('blocked-users/{id}', [ApiController::class, 'getBlockUser'])->name('GetBlockUser');
 });
